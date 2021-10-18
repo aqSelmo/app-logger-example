@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  app:
+    build: ./app
+    command: >
+     bash -c "yarn start:dev"
+    ports:
+      - 4000:4000
+    volumes:
+      - ./app:/app
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      DATABASE_URL: mongodb://root:102030@mongo:27017/example-1
+    depends_on:
+      - mongo
+  mongo:
+    image: bitnami/mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - ./database:/bitnami/mongodb
+    environment:
+      MONGODB_USERNAME: root
+      MONGODB_PASSWORD: 102030
+      MONGODB_DATABASE: example-1
+networks:
+  default:
+    name: app_network
+    driver: bridge
